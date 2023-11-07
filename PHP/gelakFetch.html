@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+<body>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Taldea</th>
+            </tr>
+        </thead>
+        <tbody id="tabla">
+        </tbody>
+    </table>
+    <!-- <button id="refreshButton">Insertar</button> -->
+    <button id="eguneratu">Eguneratu</button>
+    <!-- <button id="refreshButton">Eliminar</button> -->
+    <script>
+        function eguneratuTaula(data) {
+            const tabla = document.getElementById("tabla");
+            tabla.innerHTML = ""; // Limpiar la tabla antes de actualizar
+
+            for(i=0; i < data.length; i++){
+
+                var tableRow="<tr></tr>";
+                tableRow = tableRow.substring(0,tableRow.length-5) + "<td>" + data[i].id + "</td>" + tableRow.substring(tableRow.length-5) + "<td>" + data[i].izena + "</td>" 
+                + "</td>" + tableRow.substring(tableRow.length-5) + "<td>" + data[i].taldea + "</td>";
+
+                var trElement = document.createElement("tr");
+                trElement.innerHTML = tableRow;
+                document.getElementById("tabla").appendChild(trElement);
+            }
+        }
+
+        function llamadaFetch() {
+            let options = { method: "GET"};
+            fetch("gelak_json.php", options)
+            .then(response => {
+                // if (!response.ok) {
+                //     throw new Error('Error en la solicitud.');
+                // }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                eguneratuTaula(data);
+            })
+            .catch(error => {
+                console.error("Error: " + error);
+            });
+        }
+
+        document.getElementById("eguneratu").addEventListener("click", llamadaFetch);
+
+        window.addEventListener("load", llamadaFetch);
+    </script>
+</body>
+</html>
