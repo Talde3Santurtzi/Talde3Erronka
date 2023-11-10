@@ -72,15 +72,16 @@
         echo json_decode("okai");
     }elseif($_SERVER["REQUEST_METHOD"] == "PUT"){
         $json_data = json_decode(file_get_contents("php://input"), true);
-        if(isset($json_data["nan"], $json_data["izena"], $json_data["abizena"], $json_data["erabiltzailea"], $json_data["pasahitza"], $json_data["rola"])){
+        if(isset($json_data["nan"], $json_data["izena"], $json_data["abizena"], $json_data["erabiltzailea"], $json_data["pasahitza"], $json_data["rola"], $json_data["aurrekoNan"])){
             $nan = $json_data["nan"];
             $izena = $json_data["izena"];
             $abizena = $json_data["abizena"];
             $erabiltzailea = $json_data["erabiltzailea"];
             $pasahitza = $json_data["pasahitza"];
             $rola = $json_data["rola"];
+            $aurrekoNan = $json_data["aurrekoNan"];
 
-            eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
+            eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola, $aurrekoNan);
         }
     }elseif($_SERVER["REQUEST_METHOD"] == "DELETE"){
         $json_data = json_decode(file_get_contents("php://input"), true);
@@ -99,10 +100,12 @@
         $db->ezabatu($sql);
     }
 
-    function eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola) {
+    function eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola, $aurrekoNan) {
         global $db;
-        $sql = "UPDATE erabiltzailea SET izena = '$izena', erabiltzailea = '$erabiltzailea', abizena = '$abizena', pasahitza = '$pasahitza', rola = '$rola' WHERE nan = '$nan'";
-        $db->eguneratu($sql);
+        ezabatuErabiltzailea($aurrekoNan);
+        txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
+        //$sql = "UPDATE erabiltzailea SET izena = '$izena', erabiltzailea = '$erabiltzailea', abizena = '$abizena', pasahitza = '$pasahitza', rola = '$rola' WHERE nan = '$nan'";
+        //$db->eguneratu($sql);
     }
 
     function txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola) {

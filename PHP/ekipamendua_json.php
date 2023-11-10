@@ -119,6 +119,8 @@
 
     function ezabatuEkipamendua($id) {
         global $db;
+        $sql = "DELETE FROM inbentarioa WHERE idEkipamendu = '$id'";
+        $db->ezabatu($sql);
         $sql = "DELETE FROM ekipamendua WHERE id = '$id'";
         $db->ezabatu($sql);
     }

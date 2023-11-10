@@ -37,21 +37,21 @@
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            // Devolver datos JSON al front-end
-            $json_data = json_decode(file_get_contents("php://input"), true);
-            if(isset($_GET["num"])){
-                $emaitzak = lortuGelakById($_GET["num"]);
-                echo json_encode($emaitzak);
-            }else{
-                $emaitzak = lortuGelak();
-                echo json_encode($emaitzak);
-            }
-            exit;
+        // Devolver datos JSON al front-end
+        $json_data = json_decode(file_get_contents("php://input"), true);
+        if(isset($_GET["num"])){
+            $emaitzak = lortuGelakById($_GET["num"]);
+            echo json_encode($emaitzak);
+        }else{
+            $emaitzak = lortuGelak();
+            echo json_encode($emaitzak);
+        }
+        exit;
     } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Manejar solicitudes POST
         $json_data = json_decode(file_get_contents("php://input"), true);
-                $emaitzak = txertatuGela($json_data["izena"],$json_data["taldea"]);
-                echo json_encode("okai");
+        $emaitzak = txertatuGela($json_data["izena"],$json_data["taldea"]);
+        echo json_encode("okai");
     } elseif ($_SERVER["REQUEST_METHOD"] == "PUT") {
         $json_data = json_decode(file_get_contents("php://input"), true);
         // Realizar actualización de datos en la base de datos
@@ -76,6 +76,8 @@
     function ezabatuGela($id)
     {
         global $db;
+        $sql = "DELETE FROM kokalekua WHERE idGela = '$id'";
+        $db->ezabatu($sql);
         $sql = "DELETE FROM gela WHERE id = '$id'";
         $db->ezabatu($sql);
     }
