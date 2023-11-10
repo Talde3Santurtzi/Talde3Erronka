@@ -1,4 +1,8 @@
 <?php
+    //si no se pone esto, no va a funcionar en el server
+    header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    
     include "db_konexioa.php";
     $db = new Datubasea();
 
@@ -103,11 +107,3 @@
         
     }
 ?>
-
-<!DOCTYPE html>
-<html>
-    <head>
-    </head>
-    <body>
-    </body>
-</html>
