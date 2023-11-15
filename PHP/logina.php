@@ -1,19 +1,51 @@
 <?php
     //si no se pone esto, no va a funcionar en el server
-    header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+  //  header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+   // header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");    
     include "db_konexioa.php";
     $db = new Datubasea();
-
+    /**
+    * Erabiltzaile klasea.
+    *
+    * @class Erabiltzaile
+    */
     class Erabiltzaile{
+        /**
+        * @var int $nan Erabiltzailearen nan-a.
+        */
         private $nan;
+        /**
+        * @var string $izena Erabiltzailearen izena.
+        */
         private $izena;
+        /**
+        * @var string $abizena Erabiltzailearen abizena.
+        */
         private $abizena;
+        /**
+        * @var string $erabiltzailea Erabiltzailea.
+        */
         private $erabiltzailea;
+        /**
+        * @var string $pasahitza Erabiltzailearen pasahitza.
+        */
         private $pasahitza;
+        /**
+        * @var string $rola Erabiltzailearen rola.
+        */
         private $rola;
-
+        /**
+        * Erabiltzaile klasearen eraikitzailea.
+        *
+        * @method __construct
+        * @param int $nan Erabiltzailearen nan-a.
+        * @param string $izena Erabiltzailearen izena.
+        * @param string $abizena Erabiltzailearen abizena.
+        * @param string $erabiltzailea Erabiltzailea.
+        * @param string $pasahitza Erabiltzailearen pasahitza.
+        * @param string $rola Erabiltzailearen rola.
+        */
         public function __construct($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola) {
             $this->nan = $nan;
             $this->izena = $izena;
@@ -34,15 +66,27 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         // public function getAbizena(){
         //     return $this->abizena;
         // }
-
+        /**
+         * Erabiltzailea lortzeko.
+         *
+         * @return string Erabiltzailea.
+         */
         public function getErabiltzailea(){
             return $this->erabiltzailea;
         }
-
+        /**
+         * Erabiltzailearen pasahitza lortzen du.
+         *
+         * @return string Pasahitza.
+         */
         public function getPasahitza(){
             return $this->pasahitza;
         }
-
+        /**
+         * Erabiltzailearen rola lortzeko.
+         *
+         * @return string Erabiltzailearen rola.
+         */
         public function getRola(){
             return $this->rola;
         }
@@ -60,7 +104,11 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
         }
     }
-
+    /**
+     * Erabiltzailearen datuak lortzen ditu.
+     *
+     * @return array Datuak gordetzeko array-a.
+     */
     function lortuDatuak()
     {
         global $db;
@@ -74,7 +122,13 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         }
         return $erabiltzaileak;
     }
-    
+    /**
+     * Jakitzeko erabiltzailea eta pasahitza ondo dauden.
+     *
+     * @param string $erabiltzailea Erabiltzailea.
+     * @param string $pasahitza Erabiltzailearen pasahitza.
+     * @return void
+     */
     function erabiltzaileExists($erabiltzailea, $pasahitza)
     {
         $erabiltzaileak = lortuDatuak();

@@ -14,19 +14,39 @@
             </tbody>
         </table>
         <script>
+            /**
+             * Fetch deia egiteko pokemon API-ra ditto-ren informazioa lortzeko
+             * 
+             * @function llamadaFetch
+             * @throws {Error} Errorerenbat badagoen Fetch-ean.
+             * @listens window#load
+             * 
+             */
             function llamadaFetch(){
+                /**
+                 * Fetch-a.
+                 * @type {Object}
+                 * @property {string} method - Deiaren metodoa (GET).
+                 * @property {string} mode - Deiaren metodoa (cors).
+                 */
                 let options = {method: "GET", mode: 'cors'};
                 fetch("https://pokeapi.co/api/v2/pokemon/ditto",options)
-                .then(response => response.json())  // Analiza la respuesta JSON
+                .then(response => response.json())  // JSON analizatzen du
                 .then(data => {
                     console.log(data);
                     console.log(data.abilities.length);
                 
-                for(key=0; key < data.abilities.length; key++){
-
+                for(let key=0; key < data.abilities.length; key++){
+                    /**
+                     * Fila de la tabla con información de una habilidad del Pokémon.
+                     * @type {string}
+                     */
                     var TableRow="<tr></tr>";
                     TableRow = TableRow.substring(0,TableRow.length-5) + "<td>" + data.abilities[key].ability["name"] + "</td>" + TableRow.substring(TableRow.length-5) + "<td>" + data.abilities[key].ability["url"] + "</td>" ;
-                
+                    /**
+                     * Elemento de fila de la tabla.
+                     * @type {HTMLTableRowElement}
+                     */
                     var TrElement = document.createElement("tr");
                     TrElement.innerHTML = TableRow;
                     document.getElementById("tabla").appendChild(TrElement);
@@ -34,9 +54,17 @@
                 
                 })
                 .catch(error => {
+                /**
+                 * Maneja errores en la llamada Fetch.
+                 * @type {Error}
+                 */
                     console.error("Error: " + error);
                 });
             }
+            /**
+             * Escucha el evento de carga de la ventana y realiza la llamadaFetch.
+             * @event window#load
+             */
             window.addEventListener("load", llamadaFetch);
         </script>
     </body>

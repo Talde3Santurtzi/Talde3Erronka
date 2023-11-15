@@ -1,28 +1,52 @@
 <?php
     //si no se pone esto, no va a funcionar en el server
-    header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    //header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+    //header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");    
     include "db_konexioa.php";
 
     $db = new Datubasea();
-
+    /**
+    * Kategoria klasea.
+    *
+    * @class Kategoria
+    */
     class Kategoria
     {
+        /**
+        * @var int $id Kategoriaren id-a.
+        */
         public $id;
+        /**
+        * @var string $izena Kategoriaren izena.
+        */
         public $izena;
-
+        /**
+        * Kategoria klasearen eraikitzailea.
+        *
+        * @method __construct
+        * @param int $id Kategoriaren id-a.
+        * @param string $izena Kategoriaren izena.
+        */
         public function __construct($id, $izena)
         {
             $this->id = $id;
             $this->izena = $izena;
         }
-
+        /**
+         * Kategoriaren id-a lortzeko.
+         *
+         * @return int Kategoriaren id-a.
+         */
         public function getId()
         {
             return $this->id;
         }
-
+        /**
+         * Kategoriaren izena lortzeko.
+         *
+         * @return string Kategoriaren izena
+         */
         public function getIzena()
         {
             return $this->izena;
@@ -60,7 +84,12 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
             echo "OK";
         }
     }
-
+    /**
+     * Kategoria bat ezabatzeko datu basetik eta honen ekipoak.
+     *
+     * @param int $id Kategoriaren id-a ezabatzeko.
+     * @return void
+     */
     function ezabatuKategoria($id)
     {
         global $db;
@@ -69,21 +98,36 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         $sql = "DELETE FROM kategoria WHERE id = '$id'";
         $db->ezabatu($sql);
     }
-
+    /**
+     * Kategoria baten izena eguneratzeko.
+     *
+     * @param int $id ID de la categoría a actualizar.
+     * @param string $izena Nuevo nombre de la categoría.
+     * @return void
+     */
     function eguneratuKategoria($id, $izena)
     {
         global $db;
         $sql = "UPDATE kategoria SET izena = '$izena' WHERE id = '$id'";
         $db->eguneratu($sql);
     }
-
+    /**
+     * Kategoria berria sartzeko dat basean.
+     *
+     * @param string $izena Kategoria berriaren izena.
+     * @return void
+     */
     function txertatuKategoria($izena)
     {
         global $db;
         $sql = "INSERT INTO kategoria (izena) VALUES ('$izena')";
         $db->txertatu($sql);
     }
-
+    /**
+     * Kategoria array bat lortzen du.
+     *
+     * @return array Kategoriak gordetzeko array-a.
+     */
     function lortuKategoriak()
     {
         global $db;
@@ -96,7 +140,12 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
             return $kategoriak;
         }
     }
-    
+    /**
+     * Kategoria bat lortzen du id-ekin.
+     *
+     * @param int $id Kategoriaren id-a.
+     * @return array Kategoriaren array-a.
+     */
     function lortuKategoriaById($id)
     {
         global $db;
