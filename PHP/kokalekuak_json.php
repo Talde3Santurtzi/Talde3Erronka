@@ -2,45 +2,92 @@
     //si no se pone esto, no va a funcionar en el server
     header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");    
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");    
     include "db_konexioa.php";
 
     $db = new Datubasea ();
-
+    /**
+    * Kokalekua klasea.
+    *
+    * @class Kokalekua
+    */
     class Kokalekua {
+        /**
+        * @var int $idGela Gelaren id-a.
+        */
         public $idGela;
+        /**
+        * @var string $etiketa Inbentarioaren etiketa.
+        */
         public $etiketa;
+        /**
+        * @var string $hasieraData erreserba hasten den data.
+        */
         public $hasieraData;
+        /**
+        * @var string $amaiera erreserba amaitzen den data.
+        */
         public $amaieraData;
-        
+        /**
+        * Kategoria klasearen eraikitzailea.
+        *
+        * @method __construct
+        * @param int $idGela Gelaren id-a.
+        * @param string $etiketa Inbentarioaren etiketa.
+        * @param string $hasieraData erreserba hasten den data.
+        * @param string $amaiera erreserba amaitzen den data.
+        */
         public function __construct($etiketa, $idGela, $hasieraData, $amaieraData) {
             $this->etiketa = $etiketa;
             $this->idGela = $idGela;
             $this->hasieraData = $hasieraData;
             $this->amaieraData = $amaieraData;
         }
-
+        /**
+         * Etiketa lortzeko.
+         *
+         * @method getEtiketa
+         * @return int
+         */
         public function getEtiketa()
         {
             return $this->etiketa;
         }
-
+        /**
+         * IdGela lortzeko.
+         *
+         * @method getIdGela
+         * @return string
+         */
         public function getIdGela()
         {
             return $this->idGela;
         }
-
+        /**
+         * HasieraData lortzeko.
+         *
+         * @method getHasieraData
+         * @return string
+         */
         public function getHasieraData()
         {
             return $this->hasieraData;
         }
-
+        /**
+         * AmaieraData lortzeko.
+         *
+         * @method getAmaieraData
+         * @return string
+         */
         public function getAmaieraData()
         {
             return $this->amaieraData;
         }
     }
 
+        /**
+         * Request metodoaren arabera zer egin behar den jakiteko
+         */
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $json_data = json_decode(file_get_contents("php://input"), true);
         if (isset($_GET["num"])) {
@@ -76,14 +123,24 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
             echo "OK";
         }
     }
-
+        /**
+         * Kokalekua ezabatzeko.
+         *
+         * @method ezabatuKokalekua
+         * @return string
+         */
     function ezabatuKokalekua($value) {
         global $db;
         $datuak=explode(",",$value);
         $sql = "DELETE FROM kokalekua WHERE etiketa = '$datuak[0]' AND idGela = '$datuak[1]' AND hasieraData = '$datuak[2]'";
         $db->ezabatu($sql);
     }
-
+        /**
+         * Kokalekua eguneratzeko + balioztapenak.
+         *
+         * @method eguneratuKokalekua
+         * @return string
+         */
     function eguneratuKokalekua($datosAntiguos, $etiketa, $idGela, $hasieraData, $amaieraData) {
         global $db;
         $datosAnt = explode(",", $datosAntiguos);
@@ -130,7 +187,12 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         // $sql = "UPDATE kokalekua SET idGela = '$idGela', hasieraData = '$hasieraData', amaieraData = '$amaieraData', etiketa = '$etiketa' WHERE etiketa = '$datosAnt[0]' AND idGela = '$datosAnt[1]' AND hasieraData = '$datosAnt[2]'";
         // $db->eguneratu($sql);
     }
-
+        /**
+         * Kokalekua txertatzeko + balioztapenak.
+         *
+         * @method txertatuKokalekua
+         * @return string
+         */
     function txertatuKokalekua($etiketa, $idGela, $hasieraData, $amaieraData) {
         global $db;
         $datos = explode(",", $etiketa);
@@ -171,7 +233,12 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
             }
         } 
     }
-
+        /**
+         * Kokalekuen datuak lortzeko.
+         *
+         * @method lortuKokalekuak
+         * @return array
+         */
     function lortuKokalekuak() {
         global $db;
         $emaitzak = $db->datuakLortu("SELECT I.etiketa, G.izena, I.idEkipamendu, E.marka, E.modelo, K.idGela, K.hasieraData, K.amaieraData FROM kokalekua K, ekipamendua E, inbentarioa I, gela G WHERE K.etiketa = I.etiketa AND  I.idEkipamendu = E.id AND G.id = K.idGela;");
@@ -184,7 +251,12 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         }else{
         } 
     }
-
+        /**
+         * Kokaleku bat lortu bere id-aren arabera.
+         *
+         * @method lortuKokalekuakByEtiketa
+         * @return array
+         */
     function lortuKokalekuakByEtiketa($etiketa) {
         $datos = explode(",", $etiketa);
         global $db;

@@ -1,7 +1,7 @@
 <?php
     //si no se pone esto, no va a funcionar en el server
-    header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    //header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+    //header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 
     /**
      * Sarbide kontrola HTTP metodoentzako eta datu baseko konexiorako.
@@ -176,7 +176,7 @@
     }elseif($_SERVER["REQUEST_METHOD"] == "POST"){
         $json_data = json_decode(file_get_contents("php://input"), true);
         $emaitzak = txertatuEkipamendua($json_data["izena"], $json_data["deskribapena"], $json_data["marka"], $json_data["modelo"], $json_data["stock"], $json_data["idKategoria"]);
-        echo json_decode("okai");
+        echo json_encode($emaitzak);
     }elseif($_SERVER["REQUEST_METHOD"] == "PUT"){
         $json_data = json_decode(file_get_contents("php://input"), true);
         if(isset($json_data["id"], $json_data["izena"], $json_data["deskribapena"], $json_data["marka"], $json_data["modelo"], $json_data["stock"], $json_data["idKategoria"])){
@@ -250,8 +250,25 @@
      */
     function txertatuEkipamendua($izena, $deskribapena, $marka, $modelo, $stock, $idKategoria) {
         global $db;
-        $sql = "INSERT INTO ekipamendua (izena, deskribapena, marka, modelo, stock, idKategoria) VALUES ('$izena', '$deskribapena', '$marka', '$modelo', '$stock','$idKategoria')";
-        $db->txertatu($sql);
+        $emaitzak = $db->datuakLortu("SELECT izena from ekipamendua");
+        $bul = true;
+        $ekipamendu = array();
+        if (is_object($emaitzak)) {
+            while ($row = $emaitzak->fetch_assoc()) {
+                $ekipamendu = $row["izena"];
+                if($row["izena"] == $izena){
+                    $bul = false;
+                }
+            }
+            if ($bul){
+                $sql = "INSERT INTO ekipamendua (izena, deskribapena, marka, modelo, stock, idKategoria) VALUES ('$izena', '$deskribapena', '$marka', '$modelo', '$stock','$idKategoria')";
+                $db->txertatu($sql);
+            }else{
+                return "Ekipamendu hori jada existitzen da. Probatu beste izenarekin.";
+            }
+        }else{
+            return "errorea txertatzean";
+        }
     }
     /**
      * Ekipoen informazioa lortzeko.
@@ -293,12 +310,3 @@
         }
     }
 ?>
-
-
-<html>
-    <head>
-    </head>
-    <body>
-        
-    </body>
-</html>

@@ -1,7 +1,7 @@
 <?php
     //si no se pone esto, no va a funcionar en el server
-    header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    //header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+    //header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");    
     include "db_konexioa.php";
 
@@ -131,7 +131,7 @@
     }elseif($_SERVER["REQUEST_METHOD"] == "POST"){
         $json_data = json_decode(file_get_contents("php://input"), true);
         $emaitzak = txertatuErabiltzailea($json_data["nan"], $json_data["izena"], $json_data["abizena"], $json_data["erabiltzailea"], $json_data["pasahitza"], $json_data["rola"]);
-        echo json_decode("okai");
+        echo json_encode($emaitzak);
     }elseif($_SERVER["REQUEST_METHOD"] == "PUT"){
         $json_data = json_decode(file_get_contents("php://input"), true);
         if(isset($json_data["nan"], $json_data["izena"], $json_data["abizena"], $json_data["erabiltzailea"], $json_data["pasahitza"], $json_data["rola"], $json_data["aurrekoNan"])){
@@ -143,7 +143,8 @@
             $rola = $json_data["rola"];
             $aurrekoNan = $json_data["aurrekoNan"];
 
-            eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola, $aurrekoNan);
+            $emaitzak = eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola, $aurrekoNan);
+            echo json_encode($emaitzak);
         }
     }elseif($_SERVER["REQUEST_METHOD"] == "DELETE"){
         $json_data = json_decode(file_get_contents("php://input"), true);
@@ -162,87 +163,8 @@
      * @param string $nan Erabiltzailearen nan-a.
      * @return void
      */
-    function ezabatuErabiltzailea($nan) {
-        global $db;
-        $sql = "DELETE FROM erabiltzailea WHERE nan = '$nan'";
-        $db->ezabatu($sql);
-    }
-    /**
-     * Datu basea eguneratzeko.
-     *
-     * @method eguneratuErabiltzailea
-     * @param string $nan Erabiltzailearen nan-a.
-     * @param string $izena Erabiltzailearen izena.
-     * @param string $abizena Erabiltzailearen abizena.
-     * @param string $erabiltzailea Erabiltzailearen usuarioa.
-     * @param string $pasahitza Pasahitza.
-     * @param string $rola Rola.
-     * @param string $aurrekoNan Aurreko usuarioaren nan-a.
-     * @return void
-     */
-    function eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola, $aurrekoNan) {
-        global $db;
-        ezabatuErabiltzailea($aurrekoNan);
-        txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
-        //$sql = "UPDATE erabiltzailea SET izena = '$izena', erabiltzailea = '$erabiltzailea', abizena = '$abizena', pasahitza = '$pasahitza', rola = '$rola' WHERE nan = '$nan'";
-        //$db->eguneratu($sql);
-    }
-    /**
-     * Datuak sartzeko datu basean.
-     *
-     * @method txertatuErabiltzailea
-     * @param string $nan Erabiltzauilearen nan-a.
-     * @param string $izena Erabiltzailearen izena.
-     * @param string $abizena Erabiltzailearen abizena.
-     * @param string $erabiltzailea Erabiltzailearen usuarioa.
-     * @param string $pasahitza Pasahitza.
-     * @param string $rola Rola.
-     * @return void
-     */
-    function txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola) {
-        global $db;
-        $sql = "INSERT INTO erabiltzailea (nan, izena, abizena, erabiltzailea, pasahitza, rola) VALUES ('$nan', '$izena', '$abizena', '$erabiltzailea', '$pasahitza', '$rola')";
-        $db->txertatu($sql);
-        
-    }
-    /**
-     * Erabiltzailearen informazioa lortzeko.
-     *
-     * @method lortuErabiltzailea
-     * @return array Erabiltzaile objetuen array-a.
-     */
-    function lortuErabiltzailea() {
-        global $db;
-        $emaitzak = $db->datuakLortu("SELECT * FROM erabiltzailea");
-        $erabiltzaileak = array();
-        if (is_object($emaitzak)) {
-            while ($row = $emaitzak->fetch_assoc()) {
-                $erabiltzaileak[] = new Erabiltzailea($row["nan"], $row["izena"], $row["abizena"], $row["erabiltzailea"],  $row["pasahitza"], $row["rola"]);
-            }
-            return $erabiltzaileak;
-        }
-    }
 
-    /**
-     * Erabiltzaileen informazioa nan-arekin.
-     *
-     * @method lortuErabiltzaileaById
-     * @param string $nan Erabiltzaileen nan.
-     * @return array Erabiltzaile objetuen array-a.
-     */
-    function lortuErabiltzaileaById($nan) {
-        global $db;
-        $emaitzak = $db->datuakLortu("SELECT * FROM erabiltzailea WHERE nan = '$nan'");
-        $erabiltzaileak = array();
-        if (is_object($emaitzak)) {
-            while ($row = $emaitzak->fetch_assoc()) {
-                $erabiltzaileak[] = new Erabiltzailea($row["nan"], $row["izena"], $row["abizena"], $row["erabiltzailea"],  $row["pasahitza"], $row["rola"]);
-            }
-            return $erabiltzaileak;
-        }
-    }
-
-    /*function nanOndo($nan)
+     function nanOndo($nan)
     {
         $dni = $nan;
         $error = false;
@@ -276,15 +198,136 @@
         } if ($error) {
             return "Mal";
         }
-    }*/
-?>
+    }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>php...</title>
-</head>
-<body>
+    function ezabatuErabiltzailea($nan) {
+        global $db;
+        $sql = "DELETE FROM erabiltzailea WHERE nan = '$nan'";
+        $db->ezabatu($sql);
+    }
+    /**
+     * Datu basea eguneratzeko.
+     *
+     * @method eguneratuErabiltzailea
+     * @param string $nan Erabiltzailearen nan-a.
+     * @param string $izena Erabiltzailearen izena.
+     * @param string $abizena Erabiltzailearen abizena.
+     * @param string $erabiltzailea Erabiltzailearen usuarioa.
+     * @param string $pasahitza Pasahitza.
+     * @param string $rola Rola.
+     * @param string $aurrekoNan Aurreko usuarioaren nan-a.
+     * @return void
+     */
+    function eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola, $aurrekoNan) {
+        global $db;
+        $bienmal=nanOndo($nan);
+        if($bienmal=="Mal"){
+            return "NAN hau txarto dago"; 
+        }else{
+             $sql = "SELECT nan FROM erabiltzailea";
+        $bul = true;
+        $emaitzak = $db->datuakLortu($sql);
+        $erabiltzaileak = array();
+        if (is_object($emaitzak)) {
+            while ($row = $emaitzak->fetch_assoc()) {
+                $erabiltzaileak = array($row["nan"]);
+                if ($row["nan"] == $aurrekoNan){
+                    $bul = false;
+                }
+            }
+        }
+
+        if ($bul){
+            ezabatuErabiltzailea($aurrekoNan);
+            txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
+        }else {
+            return "NAN hau erabiltzen ari da"; 
+        }
+        }
+       
+        
+        //$sql = "UPDATE erabiltzailea SET izena = '$izena', erabiltzailea = '$erabiltzailea', abizena = '$abizena', pasahitza = '$pasahitza', rola = '$rola' WHERE nan = '$nan'";
+        //$db->eguneratu($sql);
+    }
+    /**
+     * Datuak sartzeko datu basean.
+     *
+     * @method txertatuErabiltzailea
+     * @param string $nan Erabiltzauilearen nan-a.
+     * @param string $izena Erabiltzailearen izena.
+     * @param string $abizena Erabiltzailearen abizena.
+     * @param string $erabiltzailea Erabiltzailearen usuarioa.
+     * @param string $pasahitza Pasahitza.
+     * @param string $rola Rola.
+     * @return void
+     */
+    function txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola) {
+        global $db;
+        $bienmal=nanOndo($nan);
+        if($bienmal=="Mal"){
+            return "NAN hau txarto dago"; 
+        }else{
+            $sql = "SELECT nan FROM erabiltzailea";
+            $bul = true;
+            $emaitzak = $db->datuakLortu($sql);
+            $erabiltzaileak = array();
+            if (is_object($emaitzak)) {
+                while ($row = $emaitzak->fetch_assoc()) {
+                    $erabiltzaileak = array($row["nan"]);
+                    if ($row["nan"] == $nan){
+                        $bul = false;
+                    }
+                }
+            }
     
-</body>
-</html>
+            if ($bul){
+                $sql = "INSERT INTO erabiltzailea (nan, izena, abizena, erabiltzailea, pasahitza, rola) VALUES ('$nan', '$izena', '$abizena', '$erabiltzailea', '$pasahitza', '$rola')";
+                $db->txertatu($sql);
+            }else {
+                return "NAN hau erabiltzen ari da"; 
+            }
+            }
+        
+        }
+        
+    
+    /**
+     * Erabiltzailearen informazioa lortzeko.
+     *
+     * @method lortuErabiltzailea
+     * @return array Erabiltzaile objetuen array-a.
+     */
+    function lortuErabiltzailea() {
+        global $db;
+        $emaitzak = $db->datuakLortu("SELECT * FROM erabiltzailea");
+        $erabiltzaileak = array();
+        if (is_object($emaitzak)) {
+            while ($row = $emaitzak->fetch_assoc()) {
+                $erabiltzaileak[] = new Erabiltzailea($row["nan"], $row["izena"], $row["abizena"], $row["erabiltzailea"],  $row["pasahitza"], $row["rola"]);
+            }
+            return $erabiltzaileak;
+        }
+    }
+
+    /**
+     * Erabiltzaileen informazioa nan-arekin.
+     *
+     * @method lortuErabiltzaileaById
+     * @param string $nan Erabiltzaileen nan.
+     * @return array Erabiltzaile objetuen array-a.
+     */
+    function lortuErabiltzaileaById($nan) {
+        global $db;
+        
+        $emaitzak = $db->datuakLortu("SELECT * FROM erabiltzailea WHERE nan = '$nan'");
+        $erabiltzaileak = array();
+        if (is_object($emaitzak)) {
+            while ($row = $emaitzak->fetch_assoc()) {
+                $erabiltzaileak[] = new Erabiltzailea($row["nan"], $row["izena"], $row["abizena"], $row["erabiltzailea"],  $row["pasahitza"], $row["rola"]);
+            }
+            return $erabiltzaileak;
+        }
+    }
+
+    
+?>  

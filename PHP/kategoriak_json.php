@@ -2,7 +2,7 @@
     //si no se pone esto, no va a funcionar en el server
     header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");    
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");    
     include "db_konexioa.php";
 
     $db = new Datubasea();
@@ -66,7 +66,7 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
         $json_data = json_decode(file_get_contents("php://input"), true);
         $emaitzak = txertatuKategoria($json_data["izena"]);
-        echo json_encode("okai");
+        echo json_encode($emaitzak);
     } elseif ($_SERVER["REQUEST_METHOD"] == "PUT") {
         $json_data = json_decode(file_get_contents("php://input"), true);
         if (isset($json_data["id"], $json_data["izena"])) {
@@ -120,8 +120,25 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     function txertatuKategoria($izena)
     {
         global $db;
-        $sql = "INSERT INTO kategoria (izena) VALUES ('$izena')";
-        $db->txertatu($sql);
+        $emaitzak = $db->datuakLortu("SELECT izena from kategoria");
+        $bul = true;
+        $kategoriak = array();
+        if (is_object($emaitzak)) {
+            while ($row = $emaitzak->fetch_assoc()) {
+                $kategoriak = $row["izena"];
+                if($row["izena"] == $izena){
+                    $bul = false;
+                }
+            }
+            if ($bul){
+                $sql = "INSERT INTO kategoria (izena) VALUES ('$izena')";
+                $db->txertatu($sql);
+            }else{
+                return "Kategoria hori jada existitzen da. Probatu beste izenarekin.";
+            }
+        }else{
+            return "Errorea txertatzean";
+        }
     }
     /**
      * Kategoria array bat lortzen du.
@@ -159,12 +176,3 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         }
     }
 ?>
-
-<!DOCTYPE html>
-<html>
-    <head>
-    <title>php...</title>
-    </head>
-    <body>
-    </body>
-</html>

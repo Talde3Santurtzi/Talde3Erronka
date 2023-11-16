@@ -1,7 +1,7 @@
 <?php
     //si no se pone esto, no va a funcionar en el server
-    header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    //header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+    //header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");  
     
     include "db_konexioa.php";
@@ -87,7 +87,7 @@
         // Manejar solicitudes POST
         $json_data = json_decode(file_get_contents("php://input"), true);
         $emaitzak = txertatuGela($json_data["izena"],$json_data["taldea"]);
-        echo json_encode("okai");
+        echo json_encode($emaitzak);
     } elseif ($_SERVER["REQUEST_METHOD"] == "PUT") {
         $json_data = json_decode(file_get_contents("php://input"), true);
         // Realizar actualización de datos en la base de datos
@@ -149,8 +149,25 @@
     function txertatuGela($izena, $taldea)
     {
         global $db;
-        $sql = "INSERT INTO gela (izena, taldea) VALUES ('$izena', '$taldea')";
-        $db->txertatu($sql);
+        $emaitzak = $db->datuakLortu("SELECT izena from gela");
+        $bul = true;
+        $gelak = array();
+        if (is_object($emaitzak)) {
+            while ($row = $emaitzak->fetch_assoc()) {
+                $gelak = $row["izena"];
+                if($row["izena"] == $izena){
+                    $bul = false;
+                }
+            }
+            if ($bul){
+                $sql = "INSERT INTO gela (izena, taldea) VALUES ('$izena', '$taldea')";
+                $db->txertatu($sql);
+            }else{
+                return "Gela hori jada existitzen da. Probatu beste izenarekin.";
+            }
+        }else{
+            return "errorea txertatzean";
+        }
     }
     /**
      * Gelen informazioa lortzen du.
@@ -191,13 +208,3 @@
     }
 
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>php...</title>
-</head>
-<body>
-    
-</body>
-</html>
