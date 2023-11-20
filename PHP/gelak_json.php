@@ -162,11 +162,16 @@
             if ($bul){
                 $sql = "INSERT INTO gela (izena, taldea) VALUES ('$izena', '$taldea')";
                 $db->txertatu($sql);
+                return "Ondo txertatu da";
+
             }else{
                 return "Gela hori jada existitzen da. Probatu beste izenarekin.";
             }
         }else{
-            return "errorea txertatzean";
+            $sql = "INSERT INTO gela (izena, taldea) VALUES ('$izena', '$taldea')";
+                $db->txertatu($sql);
+                return "Ondo txertatu da";
+
         }
     }
     /**
