@@ -91,13 +91,13 @@
                 //     $idEkipamendu = $item['idEkipamendu'];
                 //     ezabatuInbentarioa($etiketa, $idEkipamendu);
                 // }
-                echo json_encode($json_data);
                 for ($i=0; $i < count($json_data); $i++) { 
                     $datuak = explode(',', $json_data[$i]);
                     $etiketa=$datuak[0];
                     $id=$datuak[1];
-                   
-                    ezabatuInbentarioa($etiketa, $id);
+                    
+                   $emaitza= ezabatuInbentarioa($etiketa, $id);
+                   echo json_encode($emaitza)
                 }
             }
         }
@@ -111,6 +111,7 @@
          */
         function ezabatuInbentarioa($etiketa, $idEkipamendu) {
             global $db;
+            return $etiketa." ".$idEkipamendu;
             $sql = "DELETE FROM inbentarioa WHERE etiketa = '$etiketa'";
             $db->ezabatu($sql);
 
