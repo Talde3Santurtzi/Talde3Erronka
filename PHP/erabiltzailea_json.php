@@ -239,8 +239,8 @@
 
         if ($bul){
             //ezabatuErabiltzailea($aurrekoNan);
-           // txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
-            return $izena." ".$abizena." ".$erabiltzailea." ". $pasahitza." ".$rola; 
+            txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
+            return  $nan." ".$izena." ".$abizena." ".$erabiltzailea." ". $pasahitza." ".$rola; 
         }else {
             return "NAN hau erabiltzen ari da"; 
         }
