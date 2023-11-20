@@ -264,11 +264,15 @@
             if ($bul){
                 $sql = "INSERT INTO ekipamendua (izena, deskribapena, marka, modelo, stock, idKategoria) VALUES ('$izena', '$deskribapena', '$marka', '$modelo', '$stock','$idKategoria')";
                 $db->txertatu($sql);
+                return "Ondo txertatu da";
+
             }else{
                 return "Ekipamendu hori jada existitzen da. Probatu beste izenarekin.";
             }
         }else{
-            return "errorea txertatzean";
+            $sql = "INSERT INTO ekipamendua (izena, deskribapena, marka, modelo, stock, idKategoria) VALUES ('$izena', '$deskribapena', '$marka', '$modelo', '$stock','$idKategoria')";
+            $db->txertatu($sql);
+            return "Ondo txertatu da";
         }
     }
     /**
