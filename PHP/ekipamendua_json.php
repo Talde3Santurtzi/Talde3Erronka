@@ -185,10 +185,11 @@
             $marka = $json_data["marka"];
             $deskribapena = $json_data["deskribapena"];
             $modelo = $json_data["modelo"];
-            $idKategoria = $json_data["idKategoria"];
+            $idKategoria = $json_data["idKategoria"];   
             $stock = $json_data["stock"];
 
-            eguneratuEkipamendua($id, $izena, $deskribapena, $marka, $modelo, $stock, $idKategoria);
+            $emaitza = eguneratuEkipamendua($id, $izena, $deskribapena, $marka, $modelo, $stock, $idKategoria);
+            echo json_encode($emaitza);
         }
     }elseif($_SERVER["REQUEST_METHOD"] == "DELETE"){
         $json_data = json_decode(file_get_contents("php://input"), true);
