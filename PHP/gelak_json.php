@@ -96,6 +96,7 @@
             $izena = $json_data["izena"];
             $taldea = $json_data["taldea"];
             eguneratuGela($id, $izena, $taldea);
+            echo json_encode($id."".$izena." ".$taldea)
         }
     } elseif ($_SERVER["REQUEST_METHOD"] == "DELETE") {
         $json_data = json_decode(file_get_contents("php://input"), true);
