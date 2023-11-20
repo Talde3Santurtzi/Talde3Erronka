@@ -117,6 +117,9 @@
             $sql2 = "UPDATE ekipamendua SET stock = stock - 1 WHERE id = '$idEkipamendu'";
             $db->eguneratu($sql2);
 
+            $sql3 = "DELETE FROM kokalekua WHERE etiketa = '$etiketa'";
+            $db->ezabatu($sql3);
+
             return "Ezabatu da";
 
         }
