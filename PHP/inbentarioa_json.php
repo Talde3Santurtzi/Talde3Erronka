@@ -97,7 +97,7 @@
                     $id=$datuak[1];
                     
                    $emaitza= ezabatuInbentarioa($etiketa, $id);
-                   echo json_encode($emaitza)
+                   echo json_encode($emaitza);
                 }
             }
         }
