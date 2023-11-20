@@ -238,7 +238,7 @@
         }
 
         if ($bul){
-            //ezabatuErabiltzailea($aurrekoNan);
+            ezabatuErabiltzailea($aurrekoNan);
             $sql = "INSERT INTO erabiltzailea (nan, izena, abizena, erabiltzailea, pasahitza, rola) VALUES ('$nan', '$izena', '$abizena', '$erabiltzailea', '$pasahitza', '$rola')";
             $db->txertatu($sql);
             return  $nan." ".$izena." ".$abizena." ".$erabiltzailea." ". $pasahitza." ".$rola; 
