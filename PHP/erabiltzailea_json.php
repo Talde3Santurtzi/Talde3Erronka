@@ -231,7 +231,7 @@
         if (is_object($emaitzak)) {
             while ($row = $emaitzak->fetch_assoc()) {
                 $erabiltzaileak = array($row["nan"]);
-                if ($row["nan"] == $aurrekoNan){
+                if ($row["nan"] == $nan){
                     $bul = false;
                 }
             }
