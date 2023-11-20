@@ -238,8 +238,9 @@
         }
 
         if ($bul){
-            $sql = " UPDATE erabiltzailea SET nan = '$nan', izena = '$izena', abizena = '$abizena', erabiltzailea = '$erabiltzailea', pasahitza = '$pasahitza', rola = '$rola'WHERE id = '$aurrekoNan'";
-            $db->eguneratu($sql);
+            txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
+            ezabatuErabiltzailea($aurrekoNan);
+            
         }else {
             return "NAN hau erabiltzen ari da"; 
         }
