@@ -238,11 +238,16 @@
         }
 
         if ($bul){
-            txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
             ezabatuErabiltzailea($aurrekoNan);
-            
+            txertatuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola);
+            return $izena." ".$abizena." ".$erabiltzailea." ". $pasahitza." ".$rola; 
         }else {
             return "NAN hau erabiltzen ari da"; 
+        }
+        
+        if($nan==$aurrekoNan){
+            $sql = "UPDATE erabiltzailea SET izena = '$izena', abizena = '$abizena', erabiltzailea = '$erabiltzailea', pasahitza = '$pasahitza', rola = '$rola' WHERE nan = '$nan'";
+            $db->eguneratu($sql);
         }
         }
        
