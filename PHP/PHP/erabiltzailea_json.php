@@ -144,7 +144,7 @@
             $aurrekoNan = $json_data["aurrekoNan"];
 
             $emaitzak = eguneratuErabiltzailea($nan, $izena, $abizena, $erabiltzailea, $pasahitza, $rola, $aurrekoNan);
-            echo json_encode($json_data);
+            echo json_encode($emaitzak);
         }
     }elseif($_SERVER["REQUEST_METHOD"] == "DELETE"){
         $json_data = json_decode(file_get_contents("php://input"), true);
