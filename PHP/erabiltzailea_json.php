@@ -237,6 +237,13 @@
             }
         }
 
+        if($nan==$aurrekoNan){
+            $sql = "UPDATE erabiltzailea SET izena = '$izena', abizena = '$abizena', erabiltzailea = '$erabiltzailea', pasahitza = '$pasahitza', rola = '$rola' WHERE nan = '$nan'";
+            $db->eguneratu($sql);
+
+            return "Eguneratuta"; 
+        }
+
         if ($bul){
             ezabatuErabiltzailea($aurrekoNan);
             $sql = "INSERT INTO erabiltzailea (nan, izena, abizena, erabiltzailea, pasahitza, rola) VALUES ('$nan', '$izena', '$abizena', '$erabiltzailea', '$pasahitza', '$rola')";
