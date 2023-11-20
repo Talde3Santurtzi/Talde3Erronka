@@ -111,12 +111,14 @@
          */
         function ezabatuInbentarioa($etiketa, $idEkipamendu) {
             global $db;
-            return $etiketa." ".$idEkipamendu;
             $sql = "DELETE FROM inbentarioa WHERE etiketa = '$etiketa'";
             $db->ezabatu($sql);
 
             $sql2 = "UPDATE ekipamendua SET stock = stock - 1 WHERE id = '$idEkipamendu'";
             $db->eguneratu($sql2);
+
+            return "Ezabatu da";
+
         }
         /**
          * Inbentarioko ekipo bat eguneratzeko.
